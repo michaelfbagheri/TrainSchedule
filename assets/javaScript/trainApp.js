@@ -24,7 +24,7 @@ var countEntries = 0;
 //     trainNextArrival: 'Next Arrival',
 //     trainMinAway: 'Minutes Away',
 // };
-
+var fieldsArray = ['trainName','trainDestination','trainFreq','trainNextArrival','trainMinAway'] 
 var headerArray = ['Train Name','Destination','Frequency','Next Arrival','Minutes Away',]
 
 database.ref('/trainRecord'+ countEntries).set({
@@ -64,25 +64,22 @@ $('#submit-button').on('click', function(){
 })
 
 
+
 database.ref().on('value',function(snapshot){
 
-$('#schedule-table').empty()
-    // i = snapshot.child('/trainRecord' + 1 + '/countNumTrains').val()
-    console.log('there are ' + snapshot.numChildren() + ' children')
+$('#schedule-table').empty()   
+//capture total number of children in the database, subtract 1 for connections and one for the header row
     var i = snapshot.numChildren() - 2
     i = snapshot.child('/trainRecord' + i + '/countNumTrains').val()
 
+
+
+    // var test = "/trainRecord" + i +"/" + fieldsArray[1]  
+    // console.log(snapshot.child(test).val())
+   
 //set countEntries global variable so we don't overwrite the database records
     countEntries = snapshot.numChildren() - 1
     
-
-
-
-
-
-
-
-
     let tempFullIdIndex = '';
     if (snapshot.val() === null){
         return
@@ -90,48 +87,30 @@ $('#schedule-table').empty()
         var newTabRow = $('<tr>')
         $('#schedule-table').append(newTabRow)
         newTabRow.attr('id','header-row')
-        //setup header html
+        //setup header tr/th, Class/ID, plus add data from headerArray to it
         for (var headerCount = 0; headerCount < headerArray.length; headerCount++){
             var newTabHeader = $('<th>')
             $('#header-row').append(newTabHeader)
             newTabHeader.addClass('table-org')
+            newTabHeader.attr('id', headerCount)
+            newTabHeader.text(headerArray[headerCount])
             }
        
         //setup Row for input data/html
-        for (let rowCount = 0; rowCount < i; rowCount++){  
+        for (let rowCount = 1; rowCount <= i; rowCount++){  
             var newTabRow = $('<tr>')
             $('#schedule-table').append(newTabRow)
             newTabRow.attr('id','Row-' + rowCount )
             //setup Column for input data/html
-            for(let colCount = 0; colCount < 5; colCount++){
+            for(let colCount = 0; colCount < headerArray.length; colCount++){
                 var tableData = $('<td>')
                 tempFullIdIndex = 'Row-' + rowCount + '-Col-' + colCount;
                 tableData.attr('id',tempFullIdIndex)
                 newTabRow.append(tableData)
+                tableData.text(snapshot.child('/trainRecord' + rowCount + '/'+ fieldsArray[colCount]).val())
             }
             
 
-            // // $('<tr>').attr('id','"horzRow-' + j + '"')
-            // // $(newTabRow).append('<td>')
-            // // $('td').attr('id',tempFullIdIndex)
-            
-            // // (tempFullIdIndex).text(snapshot.child('/trainRecord' + j + '/trainName').val())
-            // // debugger
-            // // tempIdIndexNum++
-            // // $('#horzRow-' + j).append('<td>')
-            // // tempFullIdIndex = '"horzRow-' + j + '-VertCol-' + tempIdIndexNum + '"';
-            // // $('td').attr('id',tempFullIdIndex)
-            // // $(tempFullIdIndex).text(snapshot.child('/trainRecord' + j + '/trainDestination').val())
-            // // tempIdIndexNum++
-            // // $('#horzRow-' + j).append('<td>')
-            // // tempFullIdIndex = '"horzRow-' + j + '-VertCol-' + tempIdIndexNum + '"';
-            // // $('td').attr('id',tempFullIdIndex)
-            // // $(tempFullIdIndex).text(snapshot.child('/trainRecord' + j + '/trainFirstTime').val())
-            // // tempIdIndexNum++
-            // // $('#horzRow-' + j).append('<td>')
-            // // tempFullIdIndex = '"horzRow-' + j + '-VertCol-' + tempIdIndexNum + '"';
-            // // $('td').attr('id',tempFullIdIndex)
-            // // $(tempFullIdIndex).text(snapshot.child('/trainRecord' + j + '/trainFreq').val())
         }
         
     }
