@@ -14,9 +14,9 @@ firebase.initializeApp(config);
 var database = firebase.database()
 var trainName = '';
 var trainDestination = '';
-var trainFirstTime = '';
 var trainFreq = 0;
-var i = 0;
+var countEntries = 0;
+
 // var headerArray = {
 //     trainName: 'Train Name',
 //     trainDestination: 'Destination',
@@ -27,18 +27,20 @@ var i = 0;
 
 var headerArray = ['Train Name','Destination','Frequency','Next Arrival','Minutes Away',]
 
-database.ref('/trainRecord'+ i).set({
+database.ref('/trainRecord'+ countEntries).set({
     trainName :'Train Name',
     trainDestination : 'Destination',
     trainFreq : 'Frequency',
     trainNextArrival : 'Next Arrival',
-    trainMinAway : 'Minutes Away'
+    trainMinAway : 'Minutes Away',
+    countNumTrains: 0
     
 }) 
 
 //capture input from user and update database
 $('#submit-button').on('click', function(){
-    i++
+    countEntries = snapshot.numChildren() - 1
+   
     trainName = $('#train-name').val().trim()
     trainDestination = $('#train-destination').val().trim() 
     trainFreq = $('#train-freq').val().trim()
@@ -46,13 +48,16 @@ $('#submit-button').on('click', function(){
     trainMinAway = 5
     //Next Arrival needs to be calculate once the clock function is setup
     nextArrivalTime = 12
+    countEntries++
     
-    database.ref('/trainRecord'+ i).set({
+    database.ref('/trainRecord'+ countEntries).set({
         trainName: trainName,
         trainDestination: trainDestination,
         trainFreq: trainFreq, 
         trainNextArrival : nextArrivalTime,
-        trainMinAway: trainMinAway
+        trainMinAway: trainMinAway,
+        countNumTrains: countEntries
+
         
     }) 
 
@@ -62,8 +67,21 @@ $('#submit-button').on('click', function(){
 database.ref().on('value',function(snapshot){
 
 $('#schedule-table').empty()
-debugger
-    i = snapshot.numChildren()
+    // i = snapshot.child('/trainRecord' + 1 + '/countNumTrains').val()
+    console.log('there are ' + snapshot.numChildren() + ' children')
+    var i = snapshot.numChildren() - 2
+    
+    var i = snapshot.child('/trainRecord' + i + '/countNumTrains').val()
+    console.log(i)
+    
+
+
+
+
+
+
+
+
     let tempFullIdIndex = '';
     if (snapshot.val() === null){
         return
@@ -77,8 +95,9 @@ debugger
             $('#header-row').append(newTabHeader)
             newTabHeader.addClass('table-org')
             }
+       
         //setup Row for input data/html
-        for (let rowCount = 1; rowCount < i; rowCount++){  
+        for (let rowCount = 0; rowCount < i; rowCount++){  
             var newTabRow = $('<tr>')
             $('#schedule-table').append(newTabRow)
             newTabRow.attr('id','Row-' + rowCount )
@@ -89,7 +108,7 @@ debugger
                 tableData.attr('id',tempFullIdIndex)
                 newTabRow.append(tableData)
             }
-            debugger
+            
 
             // // $('<tr>').attr('id','"horzRow-' + j + '"')
             // // $(newTabRow).append('<td>')
