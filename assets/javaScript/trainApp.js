@@ -39,7 +39,7 @@ database.ref('/trainRecord'+ countEntries).set({
 
 //capture input from user and update database
 $('#submit-button').on('click', function(){
-    countEntries = snapshot.numChildren() - 1
+    
    
     trainName = $('#train-name').val().trim()
     trainDestination = $('#train-destination').val().trim() 
@@ -48,7 +48,7 @@ $('#submit-button').on('click', function(){
     trainMinAway = 5
     //Next Arrival needs to be calculate once the clock function is setup
     nextArrivalTime = 12
-    countEntries++
+
     
     database.ref('/trainRecord'+ countEntries).set({
         trainName: trainName,
@@ -70,9 +70,10 @@ $('#schedule-table').empty()
     // i = snapshot.child('/trainRecord' + 1 + '/countNumTrains').val()
     console.log('there are ' + snapshot.numChildren() + ' children')
     var i = snapshot.numChildren() - 2
-    
-    var i = snapshot.child('/trainRecord' + i + '/countNumTrains').val()
-    console.log(i)
+    i = snapshot.child('/trainRecord' + i + '/countNumTrains').val()
+
+//set countEntries global variable so we don't overwrite the database records
+    countEntries = snapshot.numChildren() - 1
     
 
 
