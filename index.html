@@ -18,33 +18,41 @@
     <script src="assets/javascript/trainApp.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
+    <script type="text/javascript"> $('#display').flapper().val('0123456789').change(); </script>
+
     <!-- <script src="cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js "></script> -->
 </head>
-  <body>
+  <body class="backgroundpic">
 
-      <header>train schedule</header>
+        <header class="row">
+            <div class="col-12 col-lg-12 headerdata">PADDINGTON STATION</div>
+        </header>
       <div class="container">
-          <div class="train logo"></div>
+         
         <div class="table-output">
+               
+                   <p class="sign-board-title"></p>
+                
                 <div>
-                   <p>Current Train schedule</p>
+                    <table id="schedule-table" ></table>
                 </div>
-                <table id="schedule-table" ></table>
+                
           
             
         </div>
         <div class="table-input">
             <div>
-                <p>Add Train</p>
+                <p id="input-title">Add Train To Route</p>
             </div>
-            <p>Train Name</p>
-            <input class="input-org" id="train-name" type="text">
-            <p>Destination</p>
-            <input class="input-org" id="train-destination" type="text">
-            <p>Frequency (min)</p>
-            <input class="input-org" id="train-freq" type="text">
-            <p>First Arrival</p>
-            <input class="input-org" id="train-first-arrival" type="text">
+            <!-- <p class="input-title">Train Name</p> -->
+            <input class="input-org" id="train-name" type="text" placeholder="  Train Name ">
+            <!-- <p class="input-title">Destination</p> -->
+            <input class="input-org" id="train-destination" type="text" placeholder="  Train Destination ">
+            <!-- <p class="input-title">Frequency (min)</p> -->
+            <input class="input-org" id="train-freq" type="text" placeholder="  Train Frequency (Min) ">
+            <!-- <p class="input-title">First Arrival</p> -->
+            <input class="input-org" id="train-first-arrival" type="text" placeholder="  First Train HH:MM ">
             <button id="submit-button" >Submit</button>
         </div>
 

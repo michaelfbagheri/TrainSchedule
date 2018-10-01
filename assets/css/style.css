@@ -1,16 +1,98 @@
+@import url(https://fonts.googleapis.com/css?family=Mr+Dafoe);
+@import url(https://fonts.googleapis.com/css?family=Titillium+Web:900);
+@import url(https://fonts.googleapis.com/css?family=Righteous);
+@import url(https://fonts.googleapis.com/css?family=Candal);
+@import url(https://fonts.googleapis.com/css?family=Permanent+Marker);
+@import url(https://fonts.googleapis.com/css?family=Monoton);
+
 .table-org{
     margin: 10px 50px  0 0;
+    font-family: 'Noto Serif', serif;
+    color: orange;
+    -webkit-text-stroke: 1px hsl(44, 96%, 50%);
+    -webkit-filter: drop-shadow(2px 2px 20px hsl(44, 96%, 50%));
 }
 
 .input-org{
     width: 100%;
+    font-family: 'Noto Serif', serif;
 }
 
 #schedule-table{
+    border-radius: 10px;
     width: 100%;
     min-height: 50px;
+    transition:  border 0.6s linear;
+    box-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 20px hsl(44, 96%, 50%), 0 0 30px hsl(44, 96%, 50%), 0 0 40px hsl(44, 96%, 50%), 0 0 55px hsl(44, 96%, 50%), 0 0 60px hsl(44, 96%, 50%);
+
 }
 
 .table-input{
-    margin: 50px 0 0 0;
+    margin: 75px 0 75px 0;
+    border: 1px black solid;
+    padding: 10px;
+    z-index: 1;
+    background-color: black;
+    width: 40%;
+    opacity: 0.7;
+    -webkit-text-stroke: 1px hsl(44, 96%, 50%);
+    -webkit-filter: drop-shadow(2px 2px 20px hsl(44, 96%, 50%));
+}
+
+.table-output{
+    border: 1px black solid;
+    text-align: center;
+    padding: 10px;
+    z-index: 1;
+    background-color: black;
+}
+
+.headerdata{
+    text-align: center;
+    background-color: black;
+    height: 100px;
+    font-family: 'Noto Serif', serif;
+    font-size: 40px;
+    color: orange;
+    -webkit-text-stroke: 1px hsl(44, 96%, 50%);
+    -webkit-filter: drop-shadow(2px 2px 20px hsl(44, 96%, 50%));
+    padding: 15px 0 0 0;
+    
+    
+
+}
+
+.sign-board-title{
+    text-align: center;
+}
+#input-title{
+    font-family: 'Noto Serif', serif;
+    padding: 10px 0 0 0;
+    text-align: center;
+    font-size: 20px;
+    
+}
+
+#submit-button{
+    margin: 10px 0 0 0;
+    width: 100%;
+    font-family: 'Noto Serif', serif;
+    font-size: 20px;
+}
+
+.container{
+    margin: 0;
+    margin: auto;
+}
+
+.backgroundpic{
+    background-image: url(../image/londonStation.jpg);
+    object-fit: fill;
+    z-index: -1;
+    padding: auto;
+}
+
+
+.output-title{
+    text-decoration: underline;
 }
