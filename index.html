@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="assets/javascript/trainApp.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <!-- <script src="cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js "></script> -->
 </head>
   <body>
 
@@ -29,6 +30,8 @@
                    <p>Current Train schedule</p>
                 </div>
                 <table id="schedule-table" ></table>
+          
+            
         </div>
         <div class="table-input">
             <div>
@@ -40,6 +43,8 @@
             <input class="input-org" id="train-destination" type="text">
             <p>Frequency (min)</p>
             <input class="input-org" id="train-freq" type="text">
+            <p>First Arrival</p>
+            <input class="input-org" id="train-first-arrival" type="text">
             <button id="submit-button" >Submit</button>
         </div>
 

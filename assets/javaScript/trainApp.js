@@ -10,117 +10,88 @@ var config = {
   messagingSenderId: "911450662789"
 };
 firebase.initializeApp(config);
-
 var database = firebase.database()
-var trainName = '';
-var trainDestination = '';
-var trainFreq = 0;
-var countEntries = 0;
 
-// var headerArray = {
-//     trainName: 'Train Name',
-//     trainDestination: 'Destination',
-//     trainFreq: 'Frequency',
-//     trainNextArrival: 'Next Arrival',
-//     trainMinAway: 'Minutes Away',
-// };
-var fieldsArray = ['trainName','trainDestination','trainFreq','trainNextArrival','trainMinAway'] 
-var headerArray = ['Train Name','Destination','Frequency','Next Arrival','Minutes Away',]
 
-database.ref('/trainRecord'+ countEntries).set({
-    trainName :'Train Name',
-    trainDestination : 'Destination',
-    trainFreq : 'Frequency',
-    trainNextArrival : 'Next Arrival',
-    trainMinAway : 'Minutes Away',
-    countNumTrains: 0
-    
-}) 
+$('#schedule-table').empty() 
+//Setup the table headers
+$('#schedule-table').append('<tr><td class="table-org">Train Name</td><td class="table-org">Train Destination</td><td class="table-org">Train Frequency</td><td class="table-org">Next Arrival</td><td class="table-org">Min TillNextTrain</td>')
+
+//setup the Connections Child Ref
+var connectionsRef = database.ref("/connections");
+var connectedRef = database.ref(".info/connected");
+connectedRef.on("value", function(snap) {
+  if (snap.val()) {
+        var con = connectionsRef.push(true);
+        con.onDisconnect().remove();
+        }
+});
+
+
 
 //capture input from user and update database
 $('#submit-button').on('click', function(){
-    
    
-    trainName = $('#train-name').val().trim()
-    trainDestination = $('#train-destination').val().trim() 
-    trainFreq = $('#train-freq').val().trim()
-    // trainMinAway equation needs to be derived
-    trainMinAway = 5
-    //Next Arrival needs to be calculate once the clock function is setup
-    nextArrivalTime = 12
+    var trainName = $('#train-name').val().trim()
+    var trainDestination = $('#train-destination').val().trim()
+    var trainFreq = $('#train-freq').val().trim()
+    var trainFirstArrival = $('#train-first-arrival').val().trim()
+    $('.input-org').val('')
+    console.log(trainFirstArrival)
+    var firstTimeConverted = moment(trainFirstArrival,"HH:mm").subtract(1,"years")
+    console.log(firstTimeConverted)
 
+    var time = moment()
+    console.log('Current Time: ' + moment(time).format("hh:mm"))
     
-    database.ref('/trainRecord'+ countEntries).set({
-        trainName: trainName,
-        trainDestination: trainDestination,
-        trainFreq: trainFreq, 
-        trainNextArrival : nextArrivalTime,
-        trainMinAway: trainMinAway,
-        countNumTrains: countEntries
+    var differenceInTime = moment().diff(moment(firstTimeConverted), "minutes")
+    console.log(differenceInTime)
+    
+    var tReminder = differenceInTime % trainFreq
+    console.log(tReminder)
 
-        
+
+
+
+
+    // trainMinAway equation needs to be derived
+    var trainMinAway = trainFreq - tReminder
+    console.log(trainMinAway)
+    //Next Arrival needs to be calculate once the clock function is setup
+    var trainNextArrival = moment().add(trainMinAway, "minutes")
+    console.log("arrival Time: " + moment(trainNextArrival).format('hh:mm'))
+    trainNextArrival = moment(trainNextArrival).format('hh:mm')
+    var timestamp = firebase.database.ServerValue.TIMESTAMP
+    
+    
+    database.ref("/Trains").push({
+        trainName,
+        trainDestination,
+        trainFreq,
+        trainMinAway,
+        trainNextArrival,
+        timestamp
     }) 
 
 })
 
 
 
-database.ref().on('value',function(snapshot){
-
-$('#schedule-table').empty()   
-//capture total number of children in the database, subtract 1 for connections and one for the header row
-    var i = snapshot.numChildren() - 2
-    i = snapshot.child('/trainRecord' + i + '/countNumTrains').val()
-
-
-
-    // var test = "/trainRecord" + i +"/" + fieldsArray[1]  
-    // console.log(snapshot.child(test).val())
-   
-//set countEntries global variable so we don't overwrite the database records
-    countEntries = snapshot.numChildren() - 1
-    
-    let tempFullIdIndex = '';
+database.ref("/Trains").on('child_added',function(snapshot){
     if (snapshot.val() === null){
         return
     } else{
-        var newTabRow = $('<tr>')
-        $('#schedule-table').append(newTabRow)
-        newTabRow.attr('id','header-row')
-        //setup header tr/th, Class/ID, plus add data from headerArray to it
-        for (var headerCount = 0; headerCount < headerArray.length; headerCount++){
-            var newTabHeader = $('<th>')
-            $('#header-row').append(newTabHeader)
-            newTabHeader.addClass('table-org')
-            newTabHeader.attr('id', headerCount)
-            newTabHeader.text(headerArray[headerCount])
-            }
-       
-        //setup Row for input data/html
-        for (let rowCount = 1; rowCount <= i; rowCount++){  
-            var newTabRow = $('<tr>')
-            $('#schedule-table').append(newTabRow)
-            newTabRow.attr('id','Row-' + rowCount )
-            //setup Column for input data/html
-            for(let colCount = 0; colCount < headerArray.length; colCount++){
-                var tableData = $('<td>')
-                tempFullIdIndex = 'Row-' + rowCount + '-Col-' + colCount;
-                tableData.attr('id',tempFullIdIndex)
-                newTabRow.append(tableData)
-                tableData.text(snapshot.child('/trainRecord' + rowCount + '/'+ fieldsArray[colCount]).val())
-            }
-            
+        $('#schedule-table').append('<tr><td class="table-org">' + snapshot.val().trainName + '</td><td class="table-org">' +  snapshot.val().trainDestination + '</td><td class="table-org">' + snapshot.val().trainFreq +  '</td><td class="table-org">' + snapshot.val().trainNextArrival + '</td><td class="table-org">' + snapshot.val().trainMinAway + '</td>')
 
-        }
         
     }
-    
+   
+
+
 
 }, function(errorObject){
     console.log('The Read Failed: ' + errorObject.code)
 })
-
-
 
 
 })
